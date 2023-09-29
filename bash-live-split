@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# Super dumb little live split thingy for bash
+#
+# Author: Dave Eddy <dave@daveeddy.com>
+# Date: September 27, 2023
+# License: MIT
+
+start=${EPOCHREALTIME/./}
+
+mag=$(tput setaf 5)
+cyan=$(tput setaf 6)
+rst=$(tput sgr0)
+
+while [[ -n $1 ]] ; do
+	# format and print time
+	name=$1
+	now=${EPOCHREALTIME/./}
+	delta=$((now - start))
+	min=$((delta / 1000 / 1000 / 60))
+	secs=$((delta / 1000 / 1000 % 60))
+	ms=$((delta / 1000 % 1000))
+	printf ">>>> $cyan%-20s$rst $mag%dm %d.%03dms$rst   \r" \
+		"$name" "$min" "$secs" "$ms"
+
+	# see if enter was pressed to shift through arguments
+	# note: this approach is racy - a person could press enter when `read`
+	# is not running and it will be "lost" - that's lame but i don't feel
+	# like it fixing it right now.
+	if read -r -t 0.1 -s; then
+		echo
+		shift
+	fi
+done
