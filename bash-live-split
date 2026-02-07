@@ -8,9 +8,10 @@
 
 start=${EPOCHREALTIME/./}
 
-mag=$(tput setaf 5)
-cyan=$(tput setaf 6)
-rst=$(tput sgr0)
+green=$'\e[32m'
+mag=$'\e[35m'
+cyan=$'\e[36m'
+rst=$'\e[0m'
 
 while [[ -n $1 ]] ; do
 	# format and print time
@@ -32,3 +33,5 @@ while [[ -n $1 ]] ; do
 		shift
 	fi
 done
+printf "$green%-25s$rst $mag%dm %d.%03dms$rst\n" \
+	'DONE' "$min" "$secs" "$ms"
